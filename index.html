@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Random Character</title>
+
+  <style>
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #00ff00; /* Green Screen */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+    }
+
+    .circle {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 20px;
+      border: 10px solid #fff;
+      cursor: none;
+    }
+    
+    .circle:active {
+      transform: scale(0.97);
+    }
+
+    .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.15s;
+      pointer-events: none;
+    }
+
+    /* 🔽 เพิ่มส่วนนี้ */
+    #imageInput {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="circle" onclick="startRandom()">
+    <img id="displayImage" />
+  </div>
+
+  <input type="file" id="imageInput" accept="image/*" multiple />
+
+  <script>
+    let images = [];
+    let isRandoming = false;
+
+    const input = document.getElementById("imageInput");
+    const display = document.getElementById("displayImage");
+
+    input.addEventListener("change", () => {
+      images = [];
+      for (let file of input.files) {
+        images.push(URL.createObjectURL(file));
+      }
+    });
+
+    function startRandom() {
+      if (isRandoming || images.length === 0) return;
+
+      isRandoming = true;
+      let count = 0;
+
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * images.length);
+        display.src = images[randomIndex];
+
+        display.style.transform = "scale(1.05)";
+        setTimeout(() => {
+          display.style.transform = "scale(1)";
+        }, 100);
+
+        count++;
+
+        if (count > 15) {
+          clearInterval(interval);
+          isRandoming = false;
+        }
+      }, 150);
+    }
+  </script>
+
+</body>
+</html>
